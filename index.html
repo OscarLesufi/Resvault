@@ -1,68 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ResVault</title>
-<style>
-  :root {
-    --bg: #000000; --card: #111111; --brand: #7c3aed; --text: #ffffff;
-    --muted: #888888; --border: #222222; --green: #16a34a; --orange: #ea580c; --red: #dc2626;
-  }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
-  .nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
-  .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 18px; }
-  .logo-icon { width: 32px; height: 32px; background: #000000; border: 2px solid #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; letter-spacing: -1px; }
-  .menu { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
-  .search-wrap { padding: 16px; }
-  .search { width: 100%; padding: 14px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; }
-  .docs { padding: 0 16px 100px; }
-  .doc { margin-bottom: 12px; padding: 16px; background: var(--card); border-radius: 16px; border: 1px solid var(--border); }
-  .doc-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px; }
-  .doc-name { font-size: 16px; font-weight: 600; }
-  .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
-  .badge.green { background: rgba(22, 163, 74, 0.2); color: var(--green); }
-  .badge.orange { background: rgba(234, 88, 12, 0.2); color: var(--orange); }
-  .badge.red { background: rgba(220, 38, 38, 0.2); color: var(--red); }
-  .doc-type { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
-  .btn-row { display: flex; gap: 8px; }
-  .btn { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 15px; }
-  .view { background: #2563eb; color: white; }
-  .share { background: #16a34a; color: white; }
-  .fab-col { position: fixed; bottom: 24px; right: 20px; display: flex; flex-direction: column; gap: 12px; }
-  .fab { width: 56px; height: 56px; border-radius: 50%; border: none; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-  .fab.add { background: var(--brand); }
-  .fab.affidavit { background: var(--red); font-size: 20px; }
-  .beta { background: rgba(124, 58, 237, 0.1); border: 1px solid var(--brand); color: #a78bfa; padding: 12px; margin: 16px; border-radius: 12px; text-align: center; font-size: 14px; }
-  .sidebar { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: var(--card); border-right: 1px solid var(--border); transition: 0.3s; z-index: 20; padding: 20px; }
-  .sidebar.open { left: 0; }
-  .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-  .close { background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
-  .menu-item { padding: 16px 0; border-bottom: 1px solid var(--border); font-size: 16px; cursor: pointer; }
-  .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; z-index: 15; }
-  .overlay.show { display: block; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f0f0f">
+    <title>ResVault — SA Document Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f; color: #fff; min-height: 100vh;
+        }
+        .header { 
+            background: #1a1a1a; padding: 16px; border-bottom: 1px solid #333;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 20px; }
+        .logo-icon { 
+            width: 32px; height: 32px; background: #fff; color: #000; 
+            border-radius: 6px; display: grid; place-items: center; font-weight: 900;
+        }
+        .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+        .banner { 
+            margin: 16px; padding: 12px; background: #2a1a4a; border: 1px solid #6b46c1;
+            border-radius: 8px; font-size: 14px; line-height: 1.4;
+        }
+        .search-box { margin: 16px; }
+        .search-box input { 
+            width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333;
+            border-radius: 8px; color: #fff; font-size: 16px;
+        }
+        .docs-grid { padding: 0 16px 80px; display: grid; gap: 12px; }
+        .doc-card { 
+            background: #1a1a1a; border: 1px solid #333; border-radius: 12px; 
+            padding: 16px; display: flex; gap: 12px;
+        }
+        .doc-icon { font-size: 32px; }
+        .doc-content { flex: 1; }
+        .doc-title { font-weight: 600; margin-bottom: 4px; }
+        .doc-date { font-size: 12px; color: #888; margin-bottom: 8px; }
+        .badge { 
+            display: inline-block; padding: 4px 8px; border-radius: 4px; 
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+        .badge-green { background: #065f46; color: #10b981; }
+        .badge-orange { background: #7c2d12; color: #f97316; }
+        .badge-red { background: #7f1d1d; color: #ef4444; }
+        .doc-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .btn { 
+            padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer;
+            font-size: 14px; font-weight: 600;
+        }
+        .btn-primary { background: #3b82f6; color: #fff; }
+        .btn-secondary { background: #374151; color: #fff; }
+        .fab { 
+            position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px;
+            background: #3b82f6; border-radius: 50%; border: none; color: #fff;
+            font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+        }
+        .empty { text-align: center; padding: 40px 20px; color: #666; }
+    </style>
 </head>
 <body>
-  <div class="nav">
-    <div class="logo"><div class="logo-icon">RV</div>ResVault</div>
-    <button class="menu" onclick="toggleMenu()">☰</button>
-  </div>
-  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="logo"><div class="logo-icon">RV</div>ResVault</div>
-      <button class="close" onclick="toggleMenu()">×</button>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">RV</div>
+            <span>ResVault</span>
+        </div>
+        <button class="menu-btn" onclick="alert('Menu: Generate Affidavit | About ResVault')">☰</button>
     </div>
-    <div class="menu-item" onclick="generateAffidavit()">⚖️ Generate Affidavit</div>
-    <div class="menu-item" onclick="alert('Coming soon: Expiry alerts push to phone')">⏰ Expiry Alerts</div>
-    <div class="menu-item" onclick="alert('ResVault V1.4\nGov-Ready Beta\nBuilt Polokwane, SA')">ℹ️ About</div>
-  </div>
-  <div class="beta">🇿🇦 Gov-Ready Beta: Expiry tracking + Affidavits + WhatsApp share. Free for SA citizens.</div>
-  <div class="search-wrap">
-    <input type="text" class="search" placeholder="Search Matric, ID, License..." id="search" oninput="filterDocs()">
-  </div>
-  <div id="docs" class="docs"></div>
-  <div class="fab-col">
-    <button class="fab affidavit" onclick
+
+    <div class="banner">
+        🇿🇦 Gov-Ready Beta: Expiry tracking + Affidavits + WhatsApp share. Free for SA citizens.
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="search" placeholder="Search Matric, ID, License..." oninput="renderDocs()">
+    </div>
+
+    <div class="docs-grid" id="docs"></div>
+
+    <button class="fab" onclick="alert('Upload feature coming in V1.5')">+</button>
+
+    <script>
+        const documents = [
+            {
+                id: 1,
+                name: "SA Smart ID Card",
+                type: "id",
+                icon: "🪪",
+                date: "2023-01-15",
+                expiry: null,
+                number: "9001015800086"
+            },
+            {
+                id: 2,
+                name: "Matric Certificate 2023",
+                type: "certificate",
+                icon: "🎓",
+                date: "2023-12-01",
+                expiry: null,
+                number: "2023/123456"
+            },
+            {
+                id: 3,
+                name: "Driver's License Code 8",
+                type: "license",
+                icon: "🚗",
+                date: "2020-03-10",
+                expiry: "2026-12-15",
+                number: "DL1234567"
+            },
+            {
+                id: 4,
+                name: "Vehicle License Disk",
+                type: "disk",
+                icon: "🚙",
+                date: "2024-01-01",
+                expiry: "2024-12-31",
+                number: "CA 123-456"
+            }
+        ];
+
+        function getBadge(doc) {
+            if (!doc.expiry) return '<span class="badge badge-green">No Expiry</span>';
+            
+            const today = new Date();
+            const expiry = new Date(doc.expiry);
+            const daysLeft = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+            
+            if (daysLeft < 0) return '<span class="badge badge-red">Expired</span>';
+            if (daysLeft <= 30) return `<span class="badge badge-orange">${daysLeft} days left</span>`;
+            return '<span class="badge badge-green">Valid</span>';
+        }
+
+        function generateAffidavit(doc) {
+            const text = `AFFIDAVIT\nI, the undersigned, hereby declare that my ${doc.name} (No: ${doc.number}) has been lost/stolen.\n\nDate of loss: ${new Date().toLocaleDateString()}\n\nI request a replacement document.\n\nSigned: _________________\nDate: ${new Date().toLocaleDateString()}\n\nCommissioner of Oaths`;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Affidavit_${doc.name.replace(/\s+/g, '_')}.txt`;
+            a.click();
+        }
+
+        function shareWhatsApp(doc) {
+            const msg = `ResVault Proof: My ${doc.name} (No: ${doc.number}) is ${doc.expiry ? 'valid until ' + doc.expiry : 'permanent'}. Verified via ResVault.`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function renderDocs() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const filtered = documents.filter(d => 
+                d.name.toLowerCase().includes(query) || 
+                d.number.toLowerCase().includes(query)
+            );
+            
+            const html = filtered.length ? filtered.map(doc => `
+                <div class="doc-card">
+                    <div class="doc-icon">${doc.icon}</div>
+                    <div class="doc-content">
+                        <div class="doc-title">${doc.name}</div>
+                        <div class="doc-date">No: ${doc.number} | Issued: ${doc.date}</div>
+                        ${getBadge(doc)}
+                        <div class="doc-actions">
+                            <button class="btn btn-primary" onclick="shareWhatsApp(${JSON.stringify(doc).replace(/"/g, '&quot;')})">Share</button>
+                            <button class="btn btn-secondary" onclick="generateAffidavit(${JSON.stringify(doc).replace(/"/g, '&quot;')})">⚖️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<div class="empty">No documents found</div>';
+            
+            document.getElementById('docs').innerHTML = html;
+        }
+
+        renderDocs();
+    </script>
+</body>
+</html>
