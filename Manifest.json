@@ -1,17 +1,37 @@
 {
-  "name": "ResVault SA",
-  "short_name": "ResVault",
-  "description": "SA document vault with expiry alerts + affidavits",
-  "start_url": ".",
+  "id": "resvault-v2.5-20260426-0549",
+  "name": "ResVault V2.5 - Expense Manager", 
+  "short_name": "ResVault V2.5",
+  "description": "Track expenses, get AI advice, manage your money",
+  "start_url": "./?v=2.5&cache=202604260549&r=7891",
+  "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
   "background_color": "#000000",
-  "theme_color": "#000000",
+  "theme_color": "#000000", 
+  "categories": ["finance", "productivity", "utilities"],
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "icon-192.png?v=2.5&t=202604260549&force=true",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png?v=2.5&t=202604260549&force=true", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Expense",
+      "short_name": "Add",
+      "description": "Quick add expense",
+      "url": "./?action=add&v=2.5",
+      "icons": [{ "src": "icon-192.png?v=2.5", "sizes": "192x192" }]
     }
   ]
 }
